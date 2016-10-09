@@ -6,6 +6,7 @@ $grayMediumLight: #eaeaea;
 $lightGray: #999;
 $grayDarker: #222;
 $grayLighter: #eee;
+/* $gray: #555; */
 
 @mixin box_sizing {
   -moz-box-sizing: border-box;
@@ -191,9 +192,9 @@ input {
   }
 }
 
-/* microposts */
+/* articles */
 
-.microposts {
+.articles {
   list-style: none;
   margin: 10px 0 0 0;
 

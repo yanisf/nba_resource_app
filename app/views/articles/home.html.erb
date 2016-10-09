@@ -1,0 +1,24 @@
+<%= link_to image_tag("nbalogo.png", alt: "NBA logo"), 'http://rubyonrails.org/' %>
+
+<% if signed_in? %>
+	<div class="row">
+		<aside class="span4">
+			<section>
+				<%= render 'shared/article_form' %>
+			</section>
+		</aside>
+		<div class="span8">
+			<h3>News</h3>
+			<%= render 'shared/feed' %>
+		</div>
+	</div>
+<% else %>
+	<div class="center hero-unit">
+	<h1>Welcome to the National Basketball Assosiation</h1>
+
+		<h2>
+			News
+		</h2>
+
+	</div>
+<% end %>

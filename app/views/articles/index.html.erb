@@ -1,0 +1,14 @@
+<% provide(:title, 'All News') %>
+<h1>All News</h1>
+
+<% if signed_in? %>
+	<%= link_to "Article Management", management_path, class: "btn btn-large btn-primary" %>
+<% end %>
+<% @articles_by_day.each do |day, articles| %>
+<h2><%= day.strftime("%d %B %Y") %></h2>
+	<% for article in articles %>
+	<ul class="articles">
+		<%= render article %>
+	</ul>
+	<% end %>
+<% end %>

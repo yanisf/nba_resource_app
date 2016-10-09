@@ -1,0 +1,48 @@
+<% provide(:title, @article.title) %>
+<div class="row">
+	<aside class="span4">
+		<ul class="articles">
+			<%= @article.created_at.to_formatted_s(:short) %>
+		</ul>
+		<section>
+			<h1>
+				<%= @article.title %>
+			</h1>
+			<%= @article.content %>	
+		</section>
+		
+		<section>
+		<h2>COMMENTS</h2>
+		<% @article.comments.each do |comment| %> 
+			<ol class="articles">
+			<li>
+				<% if (comment.body) %>
+					<strong> <%= User.find(comment.user_id).name %> </strong> commented
+				<% end %>
+				
+				<div class="field">
+					<%= comment.body %>
+				</div>
+				
+				<% if ((comment.user_id) && (signed_in?) && (current_user.admin || current_user?(User.find(comment.user_id)))) %>
+					<%= link_to "delete", [comment.article, comment], method: :delete,
+                                     data: { confirm: "You sure?" } %>
+				<% end %>
+			</li>	
+			</ol>	
+		<% end %>
+		</section>
+		
+		<section>
+			<%= form_for([@article, @comment]) do |f| %>
+			<%= render 'shared/error_messages', object: f.object %>
+					
+				<div class="field">
+					<%= f.text_area :body %>
+				</div>
+				<%= f.submit "Send", class: "btn btn-large btn-primary" %>
+
+			<% end %>
+		</section>
+	</aside>	
+</div>

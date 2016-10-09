@@ -1,0 +1,13 @@
+<% if (@feed_item) %>
+	<% @article = @feed_item %>
+<% end %>
+<%= form_for(@article) do |f| %>
+	<%= render 'shared/error_messages', object: f.object %>
+	<div class="field">
+		<%= f.label :title %>
+		<%= f.text_area :title, placeholder: "Type article title" %>
+		<%= f.label :content %>
+		<%= f.text_area :content, placeholder: "Type content" %>
+	</div>
+	<%= f.submit "Publish", class: "btn btn-large btn-primary" %>
+<% end %>

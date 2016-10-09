@@ -1,0 +1,19 @@
+<% provide(:title, "Edit article") %>
+<h1>Update your article</h1>
+
+<% if signed_in? %>
+	<div class="row">
+		<aside class="span4">
+			<section>
+				<%= render 'shared/article_form' %>
+			</section>
+		</aside>
+	</div>
+<% else %>
+	<div class="center hero-unit">
+	<h1>Welcome to the National Basketball Assosiation</h1>
+		<h2>
+			News
+		</h2>
+	</div>
+<% end %>
