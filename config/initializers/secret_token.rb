@@ -24,4 +24,5 @@ def secure_token
   end
 end
 
-SampleApp::Application.config.secret_key_base = secure_token
+NbaResourceApp::Application.config.secret_key_base = '2ec886a7a4e5b4277e271aa51f5496fae3da4f80431d83d1394ea86872c7b298c8b015f3819096eff9cfc37c4e3a9ec6a8421affab4ed08cc017d50b311f2f6c'
+
