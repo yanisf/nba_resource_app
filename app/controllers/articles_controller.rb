@@ -1,6 +1,7 @@
 class ArticlesController < ApplicationController
 	before_action :signed_in_user, only: [:create, :destroy, :edit, :update]
 	before_action :correct_user,   only: :destroy
+	before_action :admin_user,     only: [:new, :create, :destroy, :edit, :update]
 	
 	def index
 		@articles = Article.all
@@ -66,5 +67,9 @@ class ArticlesController < ApplicationController
 		def correct_user
 			@article = current_user.articles.find_by(id: params[:id])
 			redirect_to management_url if @article.nil?
+		end
+		
+		def admin_user
+			redirect_to(root_url) unless current_user.admin?
 		end
 end

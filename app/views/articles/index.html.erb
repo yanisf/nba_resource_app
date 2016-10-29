@@ -1,7 +1,7 @@
 <% provide(:title, 'All News') %>
 <h1>All News</h1>
 
-<% if signed_in? %>
+<% if (signed_in?) && (current_user.admin) %>
 	<%= link_to "Article Management", management_path, class: "btn btn-large btn-primary" %>
 <% end %>
 <% @articles_by_day.each do |day, articles| %>
