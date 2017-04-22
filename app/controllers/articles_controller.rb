@@ -1,8 +1,10 @@
 class ArticlesController < ApplicationController
-	before_action :signed_in_user, only: [:create, :destroy, :edit, :update]
+	before_action :authenticate_user!,     except: [:show, :index, :help]
 	before_action :correct_user,   only: :destroy
 	before_action :admin_user,     only: [:new, :create, :destroy, :edit, :update]
-	
+	before_action :current_article, only: [:show, :edit, :update, :destroy]
+	before_action :feed_articles, only: [:new, :create]
+		
 	def index
 		@articles = Article.all
 		@articles_by_day = @articles.order("created_at DESC").group_by{ |article| article.created_at.to_date }
@@ -10,26 +12,22 @@ class ArticlesController < ApplicationController
 	
 	def new
 		@article = current_user.articles.build
-		@feed_items = current_user.feed.paginate(page: params[:page])
 	end
 	
 	def create
 		@article = current_user.articles.build(article_params)
-		@feed_items = current_user.feed.paginate(page: params[:page])
 		if @article.save
 			flash[:success] = "Article is published!"
 			redirect_to management_url
 		else
 			render 'articles/new'
-		end
+		end	
 	end
 	
 	def edit
-		@feed_item = Article.find(params[:id])
 	end
 	
 	def update
-		@article = Article.find(params[:id])
 		if @article.update_attributes(article_params)
 			flash[:success] = "Article updated"
 			redirect_to management_url
@@ -39,16 +37,14 @@ class ArticlesController < ApplicationController
 	end
 	
 	def destroy
-		Article.find(params[:id]).destroy
+		@article.destroy
 		flash[:success] = "Article deleted"
 		redirect_to management_url
 	end
 	
 	def show
-		@article = Article.find(params[:id])
 		@comment = @article.comments.build
 	end
-	
 	
 	def help
 	end
@@ -59,7 +55,15 @@ class ArticlesController < ApplicationController
 	def contact
 	end
 	
-	private	
+	private
+		def current_article
+			@article = Article.find(params[:id])
+		end
+		
+		def feed_articles
+			@feed_items = current_user.articles.paginate(page: params[:page])
+		end
+		
 		def article_params
 			params.require(:article).permit(:title, :content)
 		end

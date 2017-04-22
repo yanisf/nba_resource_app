@@ -8,4 +8,8 @@ module ApplicationHelper
 			"#{base_title} | #{page_title}"
 		end
 	end
+	
+	def article_params
+		params.require(:article).permit(:title, :content)
+	end
 end

@@ -8,7 +8,7 @@ describe "User pages" do
 		let(:user) { FactoryGirl.create(:user) }
 		
 		before do
-			sign_in user
+			sign_in(user)
 			visit users_path
 		end
 		
@@ -24,7 +24,7 @@ describe "User pages" do
 			
 			it "should list each user" do
 				User.paginate(page: 1).each do |user|
-					expect(page).to have_selector('li', text: user.name)
+					expect(page).to have_selector('li', text: user.username)
 				end
 			end
 		end
@@ -36,7 +36,7 @@ describe "User pages" do
 			describe "as an admin user" do
 				let(:admin) { FactoryGirl.create(:admin) }
 				before do
-					sign_in admin
+					sign_in(admin)
 					visit users_path
 				end
 				
@@ -53,14 +53,17 @@ describe "User pages" do
 	
 	describe "profile page" do
 		let(:user) { FactoryGirl.create(:user) }
-		before { visit user_path(user) }
+		before do
+			sign_in(user)
+			visit user_path(user)
+		end
 		
-		it { should have_content(user.name) }
-		it { should have_title(user.name) }
+		it { should have_content(user.username) }
+		it { should have_title(user.username) }
 	end
 	
 	describe "signup page" do
-		before { visit signup_path }
+		before { visit new_user_registration_path }
 		
 		it { should have_content('Sign up') }
 		it { should have_title(full_title('Sign up')) }
@@ -68,9 +71,9 @@ describe "User pages" do
 	
 	describe "signup page" do
 		
-		before { visit signup_path }
+		before { visit new_user_registration_path }
 		
-		let(:submit) { "Create my account" }
+		let(:submit) { "Sign up" }
 		
 		describe "with invalid information" do
 			describe "after submission" do
@@ -78,7 +81,7 @@ describe "User pages" do
 				
 				it { should have_title('Sign up') }
 				it { should have_content('error') }
-				it { should have_content('The form contains') }
+				it { should have_content('prohibited this user from being saved') }
 			end
 			
 			
@@ -89,10 +92,10 @@ describe "User pages" do
 		
 		describe "with valid information" do
 			before do
-				fill_in "Name",         with: "Example User"
+				fill_in "Username",         with: "Example User"
 				fill_in "Email",        with: "user@example.com"
-				fill_in "Password",     with: "foobar"
-				fill_in "Confirmation", with: "foobar"
+				fill_in "Password",     with: "foobar123"
+				fill_in "Password confirmation", with: "foobar123"
 			end
 			
 			it "should create a user" do
@@ -104,8 +107,7 @@ describe "User pages" do
 				let(:user) { User.find_by(email: 'user@example.com') }
 				
 				it { should have_link('Sign out') }
-				it { should have_title(user.name) }
-				it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+				it { should have_selector('div.alert.alert-notice', text: 'Welcome! You have signed up successfully.') }
 			end
 		end
 	end
@@ -113,14 +115,12 @@ describe "User pages" do
 	describe "edit" do
 		let(:user) { FactoryGirl.create(:user) }
 		before do
-			sign_in user
-			visit edit_user_path(user)
+			sign_in(user)
+			visit edit_user_registration_path(user)
 		end
 		
 		describe "page" do
-			it { should have_content("Update your profile") }
-			it { should have_title("Edit user") }
-			it { should have_link('change', href: 'http://gravatar.com/emails') }
+			it { should have_title("Edit User") }
 		end
 		
 		describe "with invalid information" do
@@ -133,17 +133,16 @@ describe "User pages" do
 			let(:new_name)  { "New Name" }
 			let(:new_email) { "new@example.com" }
 			before do
-				fill_in "Name",             with: new_name
+				fill_in "Username",             with: new_name
 				fill_in "Email",            with: new_email
-				fill_in "Password",         with: user.password
-				fill_in "Confirm Password", with: user.password
+				fill_in "Current password",         with: user.password
 				click_button "Save changes"
 			end
 			
-			it { should have_title(new_name) }
-			it { should have_selector('div.alert.alert-success') }
-			it { should have_link('Sign out', href: signout_path) }
-			specify { expect(user.reload.name).to  eq new_name }
+			it { should have_title('All News') }
+			it { should have_selector('div.alert.alert-notice') }
+			it { should have_link('Sign out', href: destroy_user_session_path) }
+			specify { expect(user.reload.username).to  eq new_name }
 			specify { expect(user.reload.email).to eq new_email }
 		end
 	end 

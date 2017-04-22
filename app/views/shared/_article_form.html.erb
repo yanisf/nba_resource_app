@@ -1,6 +1,3 @@
-<% if (@feed_item) %>
-	<% @article = @feed_item %>
-<% end %>
 <%= form_for(@article) do |f| %>
 	<%= render 'shared/error_messages', object: f.object %>
 	<div class="field">

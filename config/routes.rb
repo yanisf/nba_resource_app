@@ -1,19 +1,16 @@
 NbaResourceApp::Application.routes.draw do
+	devise_for :users
 	resources :users
-	resources :sessions, only: [:new, :create, :destroy]
 	resources :articles do
 		resources :comments
 	end	
-	root  'articles#index'
+	root to: 'articles#index'
 	
-	match '/signup',  to: 'users#new',            via: 'get'
-	match '/signin',  to: 'sessions#new',         via: 'get'
-	match '/signout', to: 'sessions#destroy',     via: 'delete'
-	match '/help',    to: 'articles#help',    via: 'get'
-	match '/about',   to: 'articles#about',   via: 'get'
-	match '/contact', to: 'articles#contact', via: 'get'
-	match '/management', to: 'articles#new', 	via: 'get'
-	match '/articles/:id/edit', to: 'articles#edit', via: 'get'
+	get '/help', to: 'articles#help'
+	get '/about', to: 'articles#about'
+	get '/contact', to: 'articles#contact'
+	get '/management', to: 'articles#new'
+	get '/articles/:id/edit', to: 'articles#edit'
 	
 	# The priority is based upon order of creation: first created -> highest priority.
 	# See how all your routes lay out with "rake routes".

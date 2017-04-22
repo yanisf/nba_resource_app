@@ -22,15 +22,15 @@ describe "Article pages" do
 	describe "Article Management page" do
 		
 		describe "as not admin user" do
-			let(:admin) { FactoryGirl.create(:admin) }
+			let(:user) { FactoryGirl.create(:user) }
 		
-			let!(:a1) { FactoryGirl.create(:article, user: admin, title: "smth1", content: "Foo") }
-			let!(:a2) { FactoryGirl.create(:article, user: admin, title: "smth2", content: "Bar") }
+			let!(:a1) { FactoryGirl.create(:article, user: user, title: "smth1", content: "Foo") }
+			let!(:a2) { FactoryGirl.create(:article, user: user, title: "smth2", content: "Bar") }
 			
 			let(:user) { FactoryGirl.create(:user) }
 			
 			before do
-				sign_in user
+				sign_in(user)
 				visit root_path
 			end
 			
@@ -49,7 +49,7 @@ describe "Article pages" do
 			let!(:a2) { FactoryGirl.create(:article, user: admin, title: "smth2", content: "Bar") }
 			
 			before do 
-				sign_in admin 
+				sign_in(admin)
 				visit management_path
 			end
 			
@@ -61,8 +61,8 @@ describe "Article pages" do
 			end
 			
 			it "should render the user's feed" do
-				admin.feed.each do |item|
-					expect(page).to have_selector("li##{item.id}", text: item.title)
+				admin.articles.each do |item|
+					expect(page).to have_selector("li", text: item.title)
 				end
 			end
 		
@@ -74,7 +74,7 @@ describe "Article pages" do
 				let!(:a2) { FactoryGirl.create(:article, user: author, title: "smth2", content: "Bar") }
 				
 				before do
-					sign_in admin
+					sign_in(admin)
 					visit management_path
 				end
 								
@@ -91,7 +91,7 @@ describe "Article pages" do
 				let!(:article) { FactoryGirl.create(:article, user: admin, title: "smth1", content: "Foo") }
 				
 				before do
-					sign_in admin
+					sign_in(admin)
 					visit edit_article_path(article)
 				end
 				

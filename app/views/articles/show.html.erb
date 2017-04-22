@@ -12,25 +12,31 @@
 		</section>
 		
 		<section>
-		<h2>COMMENTS</h2>
-		<% @article.comments.each do |comment| %> 
-			<ol class="articles">
-			<li>
-				<% if (comment.body) %>
-					<strong> <%= User.find(comment.user_id).name %> </strong> commented
-				<% end %>
-				
-				<div class="field">
-					<%= comment.body %>
-				</div>
-				
-				<% if ((comment.user_id) && (signed_in?) && (current_user.admin || current_user?(User.find(comment.user_id)))) %>
-					<%= link_to "delete", [comment.article, comment], method: :delete,
-                                     data: { confirm: "You sure?" } %>
-				<% end %>
-			</li>	
-			</ol>	
-		<% end %>
+			<h2>COMMENTS</h2>
+			<% @article.comments.each do |comment| %> 
+				<ol class="articles">
+					<li>
+						<% if (comment.body) %>
+							<% @user = User.find_by(id: comment.user_id)%>
+							<% if @user.nil? %>
+								<strong> [Deleted User] </strong> commented
+							<% else %>
+								<strong> <%= @user.username %> </strong> commented
+							<% end %>
+						<% end %>
+						
+						<div class="field">
+							<%= comment.body %>
+						</div>
+												
+						<% if (comment.user_id) && (signed_in?) && (can? :delete, comment) %>
+							<%= link_to "delete", [comment.article, comment], method: :delete,
+											 data: { confirm: "You sure?" } %>
+						<% end %>
+						
+					</li>	
+				</ol>	
+			<% end %>
 		</section>
 		
 		<section>
