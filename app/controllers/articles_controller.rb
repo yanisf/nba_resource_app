@@ -49,12 +49,6 @@ class ArticlesController < ApplicationController
 	def help
 	end
 	
-	def about
-	end
-	
-	def contact
-	end
-	
 	private
 		def current_article
 			@article = Article.find(params[:id])
